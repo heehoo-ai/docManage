@@ -8,10 +8,6 @@ from .forms import DocForm
 from .models import Doc, Category
 
 
-class Home(TemplateView):
-    template_name = 'home.html'
-
-
 def doc_list(request):
     docs = Doc.objects.all()
     cats = Category.objects.all()
@@ -41,33 +37,16 @@ def delete_doc(request, pk):
     return redirect('doc_list')
 
 
-class CommonViewMixin:
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update(Category.get_navs())
-        return context
-
-
-class IndexView(CommonViewMixin, ListView):
-    model = Doc
-    template_name = 'doc_list.html'
-    context_object_name = 'doc_list'
-
-
-class CategoryView(IndexView):
-    def get_queryset(self):
-        """重写queryset，根据分类过滤"""
-        queryset = super().get_queryset()
-        category_id = self.kwargs.get('category_id')
-        return queryset.filter(category_id=category_id)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        category_id = self.kwargs.get('category_id')
-        category = get_object_or_404(Category, pk=category_id)
-        context.update({
-            'category': category,
-        })
-        return context
+def get_by_category(request, category_id=None):
+    if category_id:
+        docs = Category.objects.get(id=category_id).doc_set.all()
+    else:
+        docs = Doc.objects.all()
+    cats = Category.objects.all()
+    context = {
+        'docs': docs,
+        'cats': cats,
+    }
+    return render(request, 'doc_list.html', context=context)
 
 

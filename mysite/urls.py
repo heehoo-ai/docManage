@@ -4,14 +4,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from mysite.core import views
-from mysite.core.views import CategoryView
+
 
 urlpatterns = [
     path('', views.doc_list, name='doc_list'),
     path('docs/upload/', views.upload_doc, name='upload_doc'),
     path('docs/<int:pk>/', views.delete_doc, name='delete_doc'),
     path('admin/', admin.site.urls),
-    re_path(r'^category/(?P<category_id>\d+)/$', CategoryView.as_view(), name='category-list'),
+    re_path(r'^category/(?P<category_id>\d+)/$', views.get_by_category, name='category-list'),
 ]
 
 if settings.DEBUG:
