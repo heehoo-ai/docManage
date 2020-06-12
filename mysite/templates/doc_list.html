@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  {% block content_header %}
+    <h4>工程文档</h4>
+    <p>
+      <a href="{% url 'upload_doc' %}" class="btn btn-primary">上传文件</a>
+    </p>
+  {% endblock %}
+
+  <table class="table mb-0">
+    <thead>
+      <tr>
+        <th>标题</th>
+        <th>添加时间</th>
+        <th>预览</th>
+        <th>删除</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for doc in docs %}
+        <tr>
+          <td>{{ doc.title }}</td>
+          <td>{{ doc.add_time }}</td>
+          <td>
+            <a href="{{ doc.pdf.url }}" class="btn btn-primary btn-sm" target="_blank">
+              下载 PDF
+            </a>
+          </td>
+          <td>
+            <form method="post" action="{% url 'delete_doc' doc.pk %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger btn-sm">删除</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
