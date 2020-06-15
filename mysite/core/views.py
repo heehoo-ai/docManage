@@ -17,7 +17,7 @@ def doc_list(request):
 def upload_doc(request):
     if request.method == 'POST':
         form = DocForm(request.POST, request.FILES)
-        file_name = request.FILES.get('pdf').name
+        file_name = request.FILES.get('file').name
 
         new_file = form.save(commit=False)
         if not new_file.title:
