@@ -23,9 +23,9 @@ class Category(models.Model):
         }
 
 class Doc(models.Model):
-    title = models.CharField(max_length=100, verbose_name="标题")
+    title = models.CharField(max_length=100, blank=True, verbose_name="标题")
     add_time = models.DateTimeField(auto_now_add=True, verbose_name="上传时间")
-    pdf = models.FileField(upload_to='doc/pdfs/')
+    pdf = models.FileField(upload_to='doc/pdfs/', verbose_name="文件")
     category = models.ForeignKey(to=Category, on_delete=models.CASCADE, verbose_name="分类")
 
     def __str__(self):

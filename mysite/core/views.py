@@ -17,14 +17,19 @@ def doc_list(request):
 def upload_doc(request):
     if request.method == 'POST':
         form = DocForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('doc_list')
+        file_name = request.FILES.get('pdf').name
+
+        new_file = form.save(commit=False)
+        if not new_file.title:
+            new_file.title = file_name
+        new_file.save()
+        return redirect('doc_list')
     else:
         form = DocForm()
     return render(request, 'upload_doc.html', {
         'form': form
     })
+
 
 
 def delete_doc(request, pk):
