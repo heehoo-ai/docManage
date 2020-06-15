@@ -8,7 +8,7 @@
   <title>{% block title %}文档管理{% endblock %}</title>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light mb-4" style="background-color:#decdc3">
+  <nav class="navbar navbar-expand-lg navbar-light .ml-auto mb-4" style="background-color:#decdc3">
     <div class="container">
       <a class="navbar-brand" href="{% url 'doc_list' %}">首页</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,6 +23,10 @@
             {% endfor %}
         </ul>
       </div>
+        <form class="form-inline my-2 my-lg-0" action='/search/' method='GET'>
+            <input class="form-control mr-sm-2" type="search" name="keyword" placeholder="关键字" aria-label="Search" value="{{ keyword }}">
+            <button class="btn btn-outline-success  my-2 my-sm-0" type="submit">搜索</button>
+        </form>
     </div>
   </nav>
   <div class="container">

@@ -1,8 +1,5 @@
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, ListView, CreateView
-from django.core.files.storage import FileSystemStorage
-from django.urls import reverse_lazy
-from xlwings import books
+from django.views.generic import ListView
 
 from .forms import DocForm
 from .models import Doc, Category
@@ -39,7 +36,23 @@ def delete_doc(request, pk):
 
 def get_by_category(request, category_id=None):
     if category_id:
-        docs = Category.objects.get(id=category_id).doc_set.all()
+        category = Category.objects.get(id=category_id)
+        docs = category.doc_set.all()
+    else:
+        docs = Doc.objects.all()
+    cats = Category.objects.all()
+    context = {
+        'docs': docs,
+        'cats': cats,
+        'category': category,
+    }
+    return render(request, 'doc_list.html', context=context)
+
+
+def get_by_serch(request):
+    keyword = request.GET.get('keyword')
+    if keyword:
+        docs = Doc.objects.filter(title__icontains=keyword)
     else:
         docs = Doc.objects.all()
     cats = Category.objects.all()
@@ -50,3 +63,21 @@ def get_by_category(request, category_id=None):
     return render(request, 'doc_list.html', context=context)
 
 
+class SearchView(ListView):
+    model = Doc
+    template_name = 'doc_list.html'
+    context_object_name = 'docs'
+    def get_context_data(self):
+        context = super().get_context_data()
+        context.update({
+            'keyword': self.request.GET.get('keyword'),
+        })
+        return context
+
+    def get_queryset(self):
+        """重写queryset，根据标题搜索"""
+        queryset = super().get_queryset()
+        keyword = self.request.GET.get('keyword')
+        if not keyword:
+            return queryset
+        return queryset.filter(title__icontains=keyword)

@@ -3,7 +3,9 @@
 {% block content %}
 
   {% block content_header %}
-    <h4>工程文档</h4>
+      {% if category %}
+          <h4>{{ category.name }}</h4>
+      {% endif %}
     <p>
       <a href="{% url 'upload_doc' %}" class="btn btn-primary">上传文件</a>
     </p>
